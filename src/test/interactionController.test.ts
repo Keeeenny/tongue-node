@@ -9,7 +9,7 @@ import {
   createTestPosts,
 } from "./helpers/interaction.fixtures";
 
-describe.only("Interaction Controller - (Integration)", function () {
+describe("Interaction Controller - (Integration)", function () {
   let userId: ID;
   let newUserId: ID;
   let postId: ID;
