@@ -1,32 +1,29 @@
-import { executeRawQuery } from "../repositories/TestRepository";
+import dbPool from "../database/connection";
+import { createResponseMock } from "./helpers/test.utils";
 
-async function run() {
-    console.log("🚀 Avvio test query SQL...\n");
-
+describe.only("🧪 SQL Sandbox - Query", function () {
+  
+  it("Esecuzione Query Grezza", async function () {
 
     const myQuery = `
         SELECT 
-            p.id, 
-            p.title, 
-            COUNT(i.id) as total_interactions
-        FROM posts p
-        LEFT JOIN interactions i ON p.id = i.post_id
-        GROUP BY p.id
+            *
+        FROM posts;
     `;
 
-    try {
-        const result = await executeRawQuery(myQuery);
-        
-        if (Array.isArray(result) && result.length > 0) {
-            console.table(result);
-        } else {
-            console.log("⚠️ La query non ha restituito risultati.");
-        }
-    } catch (err) {
-        // L'errore è già gestito nel repository
-    } finally {
-        process.exit(); // Chiude la connessione al DB e termina
-    }
-}
 
-run();
+    try {
+        const [rows] = await dbPool.execute(myQuery);
+        
+        console.log("\n📊 DATABASE:");
+        if (Array.isArray(rows) && rows.length > 0) {
+            console.table(rows);
+        } else {
+            console.log("⚠️ Something went wrong.");
+        }
+    } catch (error) {
+        console.error("❌ ERROR SQL:", (error as Error).message);
+    }
+  });
+
+});
